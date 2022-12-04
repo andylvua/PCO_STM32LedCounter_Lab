@@ -1,3 +1,0 @@
-/Users/andrew/STM32CubeIDE/workspace_1.10.1/led_carousel/cmake-build-debug/CMakeFiles/led_carousel.elf.dir
-/Users/andrew/STM32CubeIDE/workspace_1.10.1/led_carousel/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/andrew/STM32CubeIDE/workspace_1.10.1/led_carousel/cmake-build-debug/CMakeFiles/rebuild_cache.dir
