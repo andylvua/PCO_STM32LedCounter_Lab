@@ -1,3 +1,4 @@
 /.metadata
 */.idea
 .idea
+*/cmake-build-debug
