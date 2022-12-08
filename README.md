@@ -46,7 +46,7 @@ After flashing the project, the LEDs on the board will start to blink in a carou
 
 > **Note**
 > 
-> You can adjust the speed of the carousel by changing the value of the `CAROUSEL_DELAY` constant in the `main.c` file.
+> You can adjust the speed of the carousel by changing the value of the `PWM_DELAY` constant in the `main.c` file.
 
 #### Demonstration
 
