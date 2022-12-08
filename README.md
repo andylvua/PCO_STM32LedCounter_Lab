@@ -1,6 +1,7 @@
 # Lab 5. STM32 Discovery Kit
 
 > Team members: Andrii Yaroshevych, Pavlo Kryven
+> 
 > Board: STM32F411E-DISCO
 
 ## Prerequisites
