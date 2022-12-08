@@ -50,7 +50,7 @@ After flashing the project, the LEDs on the board will start to blink in a carou
 
 #### Demonstration
 
-// Add a video here
+![Led carousel](./demos/carousel_demo.gif)
 
 ### Task 2. Led counter
 
@@ -69,7 +69,13 @@ To reset the counter, you can press the `RESET` button on the board.
 
 #### Demonstration
 
-// Add a video here
+Basic functionality:
+
+![Led counter](./demos/counter_demo.gif)
+
+Auto count functionality demonstration:
+
+![Led counter auto count](./demos/counter_auto_demo.gif)
 
 ## Additional tasks
 
