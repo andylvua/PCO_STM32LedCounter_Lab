@@ -108,7 +108,6 @@ Steps to configure the project using STM32CubeMX:
 
 Set all the channels to `PWM Generation` mode and select `Internal Clock` as the clock source.
 
-
 Also, set the `Counter Period` value to `1000-1`:
 
 ![PWM Generation](./demos/screenshots/img_2.png)
@@ -130,7 +129,7 @@ These steps are required to configure the PWM for the internal LEDs.
 
 ![NVIC](./demos/screenshots/img_3.png)
 
-allow the `EXTI line 0` interrupt to make the `User` button work.
+allow the `EXTI line0 interrupt` to make the `User` button work.
 
 Go to the `GPIO` tab and select the `PA0_WKUP` pin:
 
