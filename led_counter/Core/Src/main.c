@@ -104,7 +104,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	uint32_t get_count() {
+		HAL_NVIC_DisableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
+		uint32_t cur_count = counter;
+		HAL_NVIC_EnableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
+		return cur_count;
+	}
 
+	uint32_t get_last_press() {
+		HAL_NVIC_DisableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
+		uint32_t curr_last_press = last_press;
+		HAL_NVIC_EnableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
+		return curr_last_press;
+	}
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -134,24 +146,11 @@ int main(void)
   MX_SPI1_Init();
   MX_USB_HOST_Init();
   /* USER CODE BEGIN 2 */
-  uint32_t get_count() {
-	HAL_NVIC_DisableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
-	uint32_t current_count = counter;
-	HAL_NVIC_EnableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
-	return current_count;
-  }
-
-  uint32_t get_last_press() {
-	HAL_NVIC_DisableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
-	uint32_t current_last_press = last_press;
-	HAL_NVIC_EnableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
-	return current_last_press;
-  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+  HAL_NVIC_DisableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
   for (int i = 0; i < 16; i++) {
       GPIOE->ODR = 1 << i;
       HAL_Delay(30);
@@ -160,6 +159,7 @@ int main(void)
       GPIOE->ODR = 1 << i;
       HAL_Delay(30);
   }
+  HAL_NVIC_EnableIRQ(EXTERNAL_BUTTON_EXTI_IRQn);
 
   while (1)
   {

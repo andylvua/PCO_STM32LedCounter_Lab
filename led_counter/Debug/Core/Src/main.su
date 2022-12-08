@@ -1,7 +1,7 @@
 ../Core/Src/main.c:74:6:HAL_GPIO_EXTI_Callback	16	static
-../Core/Src/main.c:137:12:get_count	24	static
+../Core/Src/main.c:107:11:get_count	24	static
 ../Core/Src/main.c:104:5:main	32	static
-../Core/Src/main.c:144:12:get_last_press	24	static
+../Core/Src/main.c:114:11:get_last_press	24	static
 ../Core/Src/main.c:189:6:SystemClock_Config	88	static
 ../Core/Src/main.c:234:6:PeriphCommonClock_Config	32	static
 ../Core/Src/main.c:255:13:MX_I2C1_Init	8	static
