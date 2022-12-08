@@ -102,7 +102,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   */
 int main(void)
 {
-	/* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
 	volatile uint32_t *tim4_ccrx[] = {&TIM4->CCR1, &TIM4->CCR2, &TIM4->CCR3, &TIM4->CCR4};
 	static uint8_t curr_led = 0;
 
@@ -132,7 +132,7 @@ int main(void)
 
 		run_pwm();
 	}
-	/* USER CODE END 1 */
+  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -181,10 +181,10 @@ int main(void)
   while (1)
   {
 	  run_carousel();
-	  /* USER CODE END WHILE */
-	  MX_USB_HOST_Process();
+    /* USER CODE END WHILE */
+    MX_USB_HOST_Process();
 
-	  /* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -416,7 +416,7 @@ static void MX_TIM4_Init(void)
   htim4.Instance = TIM4;
   htim4.Init.Prescaler = 0;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 1000;
+  htim4.Init.Period = 1000-1;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
