@@ -34,6 +34,8 @@
 /* USER CODE BEGIN PD */
 #define CAROUSEL_DELAY 300
 #define DEBOUNCE_THRESHOLD 50
+#define BRIGHTNESS_STEP TIM4->ARR/20
+#define PWM_DELAY 15
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -49,6 +51,8 @@ I2S_HandleTypeDef hi2s3;
 
 SPI_HandleTypeDef hspi1;
 
+TIM_HandleTypeDef htim4;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -61,6 +65,7 @@ static void MX_I2C1_Init(void);
 static void MX_I2S2_Init(void);
 static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_TIM4_Init(void);
 void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
@@ -98,9 +103,37 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
+	volatile uint32_t *tim4_ccrx[] = {&TIM4->CCR1, &TIM4->CCR2, &TIM4->CCR3, &TIM4->CCR4};
+	static uint8_t curr_led = 0;
 
-  /* USER CODE END 1 */
+	bool get_current_direction() {
+		HAL_NVIC_DisableIRQ(PUSH_BUTTON_EXTI_IRQn);
+		bool current_direction = direction;
+		HAL_NVIC_EnableIRQ(PUSH_BUTTON_EXTI_IRQn);
+
+		return current_direction;
+	}
+
+	void run_pwm() {
+		volatile uint32_t *led = tim4_ccrx[curr_led];
+
+		for (; *led <= TIM4->ARR; *led += BRIGHTNESS_STEP)
+			HAL_Delay(PWM_DELAY);
+		for (; *led > 0; *led -= BRIGHTNESS_STEP)
+			HAL_Delay(PWM_DELAY);
+	}
+
+	void run_carousel () {
+		if (get_current_direction()) {
+			curr_led = (curr_led + 1) % 4;
+		} else {
+			curr_led = (curr_led + 3) % 4;
+		}
+
+		run_pwm();
+	}
+	/* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -128,28 +161,19 @@ int main(void)
   MX_I2S3_Init();
   MX_SPI1_Init();
   MX_USB_HOST_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  static uint16_t led_pins[] = {LED1_Pin, LED2_Pin, LED3_Pin, LED4_Pin};
-  static uint8_t current_led = 0;
-
-  bool get_current_direction() {
-	HAL_NVIC_DisableIRQ(PUSH_BUTTON_EXTI_IRQn);
-	bool current_direction = direction;
-	HAL_NVIC_EnableIRQ(PUSH_BUTTON_EXTI_IRQn);
-
-	return current_direction;
+  if(HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1) != HAL_OK) {
+	  Error_Handler();
   }
-
-  void run_carousel () {
-	if (get_current_direction()) {
-		current_led = (current_led + 1) % 4;
-	} else {
-		current_led = (current_led + 3) % 4;
-	}
-
-	HAL_GPIO_WritePin(GPIOD, led_pins[current_led], GPIO_PIN_SET);
-	HAL_Delay(CAROUSEL_DELAY);
-	HAL_GPIO_WritePin(GPIOD, led_pins[current_led], GPIO_PIN_RESET);
+  if(HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2) != HAL_OK) {
+	  Error_Handler();
+  }
+  if(HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3) != HAL_OK) {
+	  Error_Handler();
+  }
+  if(HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4) != HAL_OK) {
+	  Error_Handler();
   }
   /* USER CODE END 2 */
 
@@ -157,12 +181,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	run_carousel();
+	  run_carousel();
+	  /* USER CODE END WHILE */
+	  MX_USB_HOST_Process();
 
-    /* USER CODE END WHILE */
-    MX_USB_HOST_Process();
-
-    /* USER CODE BEGIN 3 */
+	  /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -373,6 +396,77 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 0;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 1000;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+  HAL_TIM_MspPostInit(&htim4);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -396,8 +490,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(OTG_FS_PowerSwitchOn_GPIO_Port, OTG_FS_PowerSwitchOn_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin
-                          |Audio_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Audio_RST_GPIO_Port, Audio_RST_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : DATA_Ready_Pin */
   GPIO_InitStruct.Pin = DATA_Ready_Pin;
@@ -431,14 +524,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(PUSH_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin LED4_Pin
-                           Audio_RST_Pin */
-  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin
-                          |Audio_RST_Pin;
+  /*Configure GPIO pin : Audio_RST_Pin */
+  GPIO_InitStruct.Pin = Audio_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  HAL_GPIO_Init(Audio_RST_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : OTG_FS_OverCurrent_Pin */
   GPIO_InitStruct.Pin = OTG_FS_OverCurrent_Pin;
