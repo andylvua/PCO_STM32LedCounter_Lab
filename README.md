@@ -85,8 +85,66 @@ Auto count functionality demonstration:
 
 ## Configuration
 
-// TODO
+The project was configured using the STM32CubeMX. 
+The configuration files can be found in the project directories - `led_carousel/led_carousel.ioc` and `led_counter/led_counter.ioc`.
 
+Steps to configure the project using STM32CubeMX:
+
+### Led carousel
+
+1. Open STM32CubeMX
+2. Open the `.ioc` configuration file
+3. For internal LED pins (`PD12` - `PD15`) select `TIM4_CHx` mode:
+    - `PD12` - `TIM4_CH1`
+    - `PD13` - `TIM4_CH2`
+    - `PD14` - `TIM4_CH3`
+    - `PD15` - `TIM4_CH4`
+
+![TIM4_CHx](./demos/screenshots/img.png)
+
+4. Go to the `Pinout & Configuration` tab and select `TIM4` in the `Timers` section:
+
+![TIM4](./demos/screenshots/img_1.png)
+
+Set all the channels to `PWM Generation` mode and select `Internal Clock` as the clock source.
+
+
+Also, set the `Counter Period` value to `1000-1`:
+
+![PWM Generation](./demos/screenshots/img_2.png)
+
+These steps are required to configure the PWM for the internal LEDs.
+
+5. On the `Pinout & Configuration` tab, add user labels to the LED pins and User button:
+   - `LED1` - `PD12`
+   - `LED2` - `PD13`
+   - `LED3` - `PD14`
+   - `LED4` - `PD15`
+   - `PUSH_BUTTON` - `PA0_WKUP`
+   
+![User labels](./demos/screenshots/img_5.png)
+![User labels](./demos/screenshots/img_6.png)
+
+
+6. Go to the `System Core` tab and select `NVIC` section:
+
+![NVIC](./demos/screenshots/img_3.png)
+
+allow the `EXTI line 0` interrupt to make the `User` button work.
+
+Go to the `GPIO` tab and select the `PA0_WKUP` pin:
+
+![GPIO](./demos/screenshots/img_7.png)
+
+set the `GPIO mode` mode to `External Interrupt with Rising/Falling edge trigger`.
+
+7. Go to the `System Core` tab and select `RCC` section:
+
+![RCC](./demos/screenshots/img_4.png)
+
+Set both `HSE` and `LSE` to `Crystal/Ceramic Resonator`.
+
+Finally, generate the code and open the project in STM32CubeIDE.
 
 ## License
 The [MIT](https://choosealicense.com/licenses/mit/) License (MIT)
