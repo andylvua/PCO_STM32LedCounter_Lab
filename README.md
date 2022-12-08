@@ -58,6 +58,8 @@ To complete this task, you will need to assemble the circuit shown below:
 
 ![Led counter circuit](./schematics/led_counter_schematic.jpeg)
 
+For better quality, you can see the [pdf version](./schematics/led_counter_schematic.pdf) of the schematic.
+
 After flashing the project, the LEDs on the external LED bar will represent the number of times an external button was pressed in binary format.
 
 As additional functionality, if you hold the external button for `500ms` counter will automatically increment by `1` every `100ms`.
@@ -170,7 +172,7 @@ allow the `EXTI line1 interrupt` to make the external button work.
 
 Go to the `GPIO` tab and select the `PA1` pin:
 
-![GPIO](./demos/screenshots/img_11.png)
+![GPIO](./demos/screenshots/img_12.png)
 
 set the `GPIO mode` mode to `External Interrupt with Rising/Falling edge trigger detection`
 
