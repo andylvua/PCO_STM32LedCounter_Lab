@@ -145,6 +145,10 @@ Set both `HSE` and `LSE` to `Crystal/Ceramic Resonator`.
 
 Finally, generate the code and open the project in STM32CubeIDE.
 
+### Led counter
+
+// TODO
+
 ## License
 The [MIT](https://choosealicense.com/licenses/mit/) License (MIT)
 
