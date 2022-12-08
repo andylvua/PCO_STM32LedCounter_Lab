@@ -74,14 +74,12 @@ To reset the counter, you can press the `RESET` button on the board.
 ## Additional tasks
 
 * All tasks were implemented using Interrupts
-* Led carousel supports PWm
+* Led carousel supports PWM
 
 
 ## Configuration
 
 // TODO
-
-## License
 
 
 ## License
