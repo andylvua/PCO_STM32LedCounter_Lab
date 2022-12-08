@@ -79,8 +79,12 @@ Auto count functionality demonstration:
 
 ## Additional tasks
 
-* All tasks were implemented using Interrupts
-* Led carousel supports PWM
+### Led carousel
+* Task 1: Use PWM to control LED brightness
+* Task 2: Implement by relying on interrupts
+
+### Led counter
+* Task 1: Implement by relying on interrupts
 
 
 ## Configuration
