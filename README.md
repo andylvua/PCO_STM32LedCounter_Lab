@@ -139,7 +139,7 @@ Go to the `GPIO` tab and select the `PA0_WKUP` pin:
 
 ![GPIO](./demos/screenshots/img_7.png)
 
-set the `GPIO mode` mode to `External Interrupt with Rising/Falling edge trigger`.
+set the `GPIO mode` mode to `External Interrupt with Rising/Falling edge trigger detection`
 
 7. Go to the `System Core` tab and select `RCC` section:
 
@@ -151,7 +151,36 @@ Finally, generate the code and open the project in STM32CubeIDE.
 
 ### Led counter
 
-// TODO
+1. In STM32CubeMX, open the `.ioc` configuration file
+2. For external LED pins (`PE6` - `PE15`) select `GPIO_Output` mode on the `Pinout & Configuration` tab:
+
+![GPIO_Output](./demos/screenshots/img_8.png)
+
+3. For external button pin (`PA1`) select `GPIO_EXTI1` mode:
+
+![GPIO_EXTI1](./demos/screenshots/img_9.png)
+
+also, give it a user label `EXTERNAL_BUTTON`.
+
+4. Go to the `System Core` tab and select `NVIC` section:
+
+![NVIC](./demos/screenshots/img_10.png)
+
+allow the `EXTI line1 interrupt` to make the external button work.
+
+Go to the `GPIO` tab and select the `PA1` pin:
+
+![GPIO](./demos/screenshots/img_11.png)
+
+set the `GPIO mode` mode to `External Interrupt with Rising/Falling edge trigger detection`
+
+5. Go to the `System Core` tab and select `RCC` section:
+
+![RCC](./demos/screenshots/img_11.png)
+
+Set both `HSE` and `LSE` to `Crystal/Ceramic Resonator`.
+
+Finally, generate the code and open the project in STM32CubeIDE.
 
 ## License
 The [MIT](https://choosealicense.com/licenses/mit/) License (MIT)
