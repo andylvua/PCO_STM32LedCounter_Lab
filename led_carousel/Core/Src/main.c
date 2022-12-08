@@ -32,7 +32,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define CAROUSEL_DELAY 300
 #define DEBOUNCE_THRESHOLD 50
 #define BRIGHTNESS_STEP TIM4->ARR/20
 #define PWM_DELAY 15
